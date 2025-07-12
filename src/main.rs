@@ -2,8 +2,8 @@ use axum::{routing::get, Json, Router};
 use diesel::prelude::*;
 use dotenvy::dotenv;
 use std::env;
-use uuid::{Uuid};
 
+use api::models::tag::Tag;
 use api::schema::tag::dsl::*;
 
 pub fn establish_connection() -> PgConnection {
@@ -12,14 +12,6 @@ pub fn establish_connection() -> PgConnection {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     PgConnection::establish(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
-}
-
-#[derive(Queryable, Selectable, serde::Serialize)]
-#[diesel(table_name = api::schema::tag)]
-#[diesel(check_for_backend(diesel::pg::Pg))]
-pub struct Tag {
-    pub id: Uuid,
-    pub name: String,
 }
 
 #[derive(serde::Serialize)]
