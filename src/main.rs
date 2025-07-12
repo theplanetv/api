@@ -1,5 +1,6 @@
 use axum::{routing::get, Json, Router};
 use diesel::prelude::*;
+use diesel_async::{RunQueryDsl};
 
 use api::config::database::establish_connection;
 use api::models::tag::Tag;
@@ -24,11 +25,12 @@ async fn main() {
 }
 
 async fn handler() -> Json<ApiResponse> {
-    let connection = &mut establish_connection();
+    let connection = &mut establish_connection().await;
     let results = tag
         .select(Tag::as_select())
         .load(connection)
-        .expect("Error loading tags");
+        .await
+        .unwrap();
 
     let response = ApiResponse {
         data: results
