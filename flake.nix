@@ -21,6 +21,7 @@
           pkgs.cargo
           pkgs.diesel-cli
           pkgs.rustc
+          pkgs.rustfmt
           pkgs.postgresql
         ];
       };

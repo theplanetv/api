@@ -1,6 +1,6 @@
-use axum::{routing::get, Json, Router};
+use axum::{Json, Router, routing::get};
 use diesel::prelude::*;
-use diesel_async::{RunQueryDsl};
+use diesel_async::RunQueryDsl;
 
 use api::config::database::establish_connection;
 use api::models::tag::Tag;
@@ -8,7 +8,7 @@ use api::schema::tag::dsl::*;
 
 #[derive(serde::Serialize)]
 pub struct ApiResponse {
-    pub data: Vec<Tag>
+    pub data: Vec<Tag>,
 }
 
 #[tokio::main]
@@ -26,15 +26,9 @@ async fn main() {
 
 async fn handler() -> Json<ApiResponse> {
     let connection = &mut establish_connection().await;
-    let results = tag
-        .select(Tag::as_select())
-        .load(connection)
-        .await
-        .unwrap();
+    let results = tag.select(Tag::as_select()).load(connection).await.unwrap();
 
-    let response = ApiResponse {
-        data: results
-    };
+    let response = ApiResponse { data: results };
 
-    return Json(response)
+    return Json(response);
 }
