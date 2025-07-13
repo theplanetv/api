@@ -4,6 +4,7 @@ use diesel_async::RunQueryDsl;
 
 use api::config::database::establish_connection;
 use api::models::tag::Tag;
+use api::routers::v1::route::v1_router;
 use api::schema::tag::dsl::*;
 
 #[derive(serde::Serialize)]
@@ -14,7 +15,7 @@ pub struct ApiResponse {
 #[tokio::main]
 async fn main() {
     // build our application with a route
-    let app = Router::new().route("/", get(handler));
+    let app = Router::new().route("/", get(handler)).merge(v1_router());
 
     // run it
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
